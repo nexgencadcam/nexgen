@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>360° Ring Showcase & Viewer | NEX GEN CAD CAM</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    body {
+      background: #0b0c10;
+      color: #fff;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    .preview-header {
+      padding: 1.25rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid rgba(201, 169, 98, 0.2);
+      background: rgba(11, 12, 16, 0.95);
+      backdrop-filter: blur(10px);
+    }
+    .preview-header h1 {
+      font-size: 1.2rem;
+      margin: 0;
+      color: var(--gold, #c9a962);
+      font-weight: 600;
+      letter-spacing: 0.05em;
+    }
+    .preview-layout {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem 1rem;
+    }
+    .stage-wrapper {
+      position: relative;
+      width: 480px;
+      max-width: 90vw;
+      height: 480px;
+      max-height: 90vw;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 30px 60px rgba(0,0,0,0.8), 0 0 40px rgba(201, 169, 98, 0.15);
+      border: 1px solid rgba(201, 169, 98, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.3s ease;
+      background: #0b0c10;
+    }
+    .stage-wrapper.bg-checker {
+      background-color: #1a1a24;
+      background-image: linear-gradient(45deg, #111 25%, transparent 25%), 
+                        linear-gradient(-45deg, #111 25%, transparent 25%), 
+                        linear-gradient(45deg, transparent 75%, #111 75%), 
+                        linear-gradient(-45deg, transparent 75%, #111 75%);
+      background-size: 20px 20px;
+      background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+    }
+    .stage-wrapper.bg-white {
+      background: #f5f5f7;
+    }
+    .stage-wrapper.bg-ruby {
+      background: radial-gradient(circle, #3d0e1c 0%, #15050a 70%, #080204 100%);
+    }
+    .canvas-view {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      user-select: none;
+      cursor: grab;
+      touch-action: pan-y;
+      position: relative;
+      z-index: 2;
+    }
+    .canvas-view:active {
+      cursor: grabbing;
+    }
+    .canvas-view img, .canvas-view video {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      pointer-events: none;
+      filter: drop-shadow(0 20px 30px rgba(0, 0, 0, 0.7));
+    }
+    .stage-glow {
+      position: absolute;
+      width: 320px;
+      height: 320px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(201, 169, 98, 0.22) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 1;
+    }
+    .stage-shadow {
+      position: absolute;
+      bottom: 24px;
+      width: 220px;
+      height: 24px;
+      border-radius: 50%;
+      background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.8) 0%, transparent 70%);
+      filter: blur(5px);
+      z-index: 1;
+      pointer-events: none;
+    }
+    .controls-panel {
+      margin-top: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+      width: 100%;
+      max-width: 600px;
+    }
+    .controls-row {
+      display: flex;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+    }
+    .ctrl-btn {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(201, 169, 98, 0.4);
+      color: #fff;
+      padding: 0.5rem 1rem;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      transition: all 0.2s ease;
+    }
+    .ctrl-btn:hover {
+      background: rgba(201, 169, 98, 0.25);
+      border-color: var(--gold, #c9a962);
+      transform: translateY(-1px);
+    }
+    .ctrl-btn.active {
+      background: var(--gold, #c9a962);
+      color: #0b0c10;
+      font-weight: 600;
+      border-color: var(--gold, #c9a962);
+    }
+    .drag-hint {
+      font-size: 0.82rem;
+      color: rgba(255, 255, 255, 0.6);
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      margin-top: 0.5rem;
+    }
+  </style>
+</head>
+<body>
+  <header class="preview-header">
+    <div style="display: flex; align-items: center; gap: 1rem;">
+      <a href="index.html" class="ctrl-btn" style="text-decoration: none;">&larr; Back to Website</a>
+      <h1>◇ Ruby & Diamond Halo Ring CAD &mdash; 360° Smooth Rotation</h1>
+    </div>
+  </header>
+
+  <main class="preview-layout">
+    <div class="stage-wrapper" id="stageWrapper">
+      <div class="stage-glow"></div>
+      <div class="canvas-view" id="viewer">
+        <video id="ringVideo" autoplay loop muted playsinline preload="auto" poster="images/ring-360/poster.png">
+          <source src="media/real-ring-showcase.webm" type="video/webm">
+          <source src="media/real-ring-showcase.mp4" type="video/mp4">
+        </video>
+        <img id="ringFrame" src="images/ring-360/ring_00.png" style="display: none;" alt="360 Ring Frame">
+      </div>
+      <div class="stage-shadow"></div>
+    </div>
+
+    <div class="drag-hint" id="hintText">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 16l-4-4m0 0l4-4m-4 4h18m-4 4l4-4m0 0l-4-4"/></svg>
+      <span>Smooth Video Loop Active &bull; Click "Interactive 360° Drag" below to spin manually frame by frame</span>
+    </div>
+
+    <div class="controls-panel">
+      <!-- Mode Toggle -->
+      <div class="controls-row">
+        <button class="ctrl-btn active" id="btnVideoMode">▶ Continuous Video Spin</button>
+        <button class="ctrl-btn" id="btnInteractiveMode">🖐 Interactive 360° Drag</button>
+      </div>
+
+      <!-- Speed Controls -->
+      <div class="controls-row">
+        <span style="font-size: 0.8rem; color: #888; margin-right: 0.2rem;">Rotation Speed:</span>
+        <button class="ctrl-btn" onclick="setSpeed(0.5, this)">0.5x (Extra Slow)</button>
+        <button class="ctrl-btn" onclick="setSpeed(0.75, this)">0.75x (Slow)</button>
+        <button class="ctrl-btn active" onclick="setSpeed(1.0, this)">1.0x (Standard Slow)</button>
+        <button class="ctrl-btn" onclick="setSpeed(1.25, this)">1.25x</button>
+      </div>
+
+      <!-- Quick Angles -->
+      <div class="controls-row">
+        <span style="font-size: 0.8rem; color: #888; margin-right: 0.2rem;">Quick Angles:</span>
+        <button class="ctrl-btn" onclick="jumpToAngle(0)">Front (0°)</button>
+        <button class="ctrl-btn" onclick="jumpToAngle(10)">Perspective (30°)</button>
+        <button class="ctrl-btn" onclick="jumpToAngle(30)">Side (90°)</button>
+        <button class="ctrl-btn" onclick="jumpToAngle(60)">Back (180°)</button>
+        <button class="ctrl-btn" onclick="jumpToAngle(90)">Side 2 (270°)</button>
+      </div>
+
+      <!-- Background Switcher -->
+      <div class="controls-row">
+        <span style="font-size: 0.8rem; color: #888; margin-right: 0.2rem;">Background:</span>
+        <button class="ctrl-btn active" onclick="setBg('dark', this)">Dark Luxury</button>
+        <button class="ctrl-btn" onclick="setBg('checker', this)">Transparent Grid</button>
+        <button class="ctrl-btn" onclick="setBg('ruby', this)">Ruby Velvet</button>
+        <button class="ctrl-btn" onclick="setBg('white', this)">Clean Studio</button>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    var totalFrames = 120;
+    var currentFrame = 0;
+    var isInteractive = false;
+    var isDragging = false;
+    var startX = 0;
+    var startFrame = 0;
+    
+    var video = document.getElementById('ringVideo');
+    var img = document.getElementById('ringFrame');
+    var viewer = document.getElementById('viewer');
+    var stage = document.getElementById('stageWrapper');
+    var hint = document.getElementById('hintText');
+    var btnVideo = document.getElementById('btnVideoMode');
+    var btnInteractive = document.getElementById('btnInteractiveMode');
+
+    function setSpeed(rate, btn) {
+      if (video) video.playbackRate = rate;
+      var siblings = btn.parentNode.querySelectorAll('.ctrl-btn');
+      siblings.forEach(function(b) { b.classList.remove('active'); });
+      btn.classList.add('active');
+    }
+
+    // Preload frames for smooth scrub
+    var frameCache = [];
+    for (var i = 0; i < totalFrames; i++) {
+      var num = i < 10 ? '0' + i : i;
+      var preloadImg = new Image();
+      preloadImg.src = 'images/ring-360/ring_' + num + '.png';
+      frameCache.push(preloadImg);
+    }
+
+    function updateFrame(idx) {
+      currentFrame = ((idx % totalFrames) + totalFrames) % totalFrames;
+      var num = currentFrame < 10 ? '0' + currentFrame : currentFrame;
+      img.src = 'images/ring-360/ring_' + num + '.png';
+    }
+
+    function setInteractiveMode(enable) {
+      isInteractive = enable;
+      if (enable) {
+        video.pause();
+        video.style.display = 'none';
+        img.style.display = 'block';
+        updateFrame(currentFrame);
+        btnInteractive.classList.add('active');
+        btnVideo.classList.remove('active');
+        hint.innerHTML = '<span>Click & drag horizontally or swipe on mobile to rotate the ring 360°</span>';
+      } else {
+        video.style.display = 'block';
+        img.style.display = 'none';
+        video.play();
+        btnVideo.classList.add('active');
+        btnInteractive.classList.remove('active');
+        hint.innerHTML = '<span>Smooth Video Loop Active &bull; Click "Interactive 360° Drag" below to spin manually</span>';
+      }
+    }
+
+    btnVideo.addEventListener('click', function() { setInteractiveMode(false); });
+    btnInteractive.addEventListener('click', function() { setInteractiveMode(true); });
+
+    function jumpToAngle(frameNum) {
+      setInteractiveMode(true);
+      updateFrame(frameNum);
+    }
+
+    function setBg(type, btn) {
+      stage.className = 'stage-wrapper';
+      if (type === 'checker') stage.classList.add('bg-checker');
+      else if (type === 'white') stage.classList.add('bg-white');
+      else if (type === 'ruby') stage.classList.add('bg-ruby');
+      
+      var siblings = btn.parentNode.querySelectorAll('.ctrl-btn');
+      siblings.forEach(function(b) { b.classList.remove('active'); });
+      btn.classList.add('active');
+    }
+
+    // Drag interaction
+    function onPointerDown(e) {
+      if (!isInteractive) setInteractiveMode(true);
+      isDragging = true;
+      startX = e.clientX || (e.touches && e.touches[0].clientX);
+      startFrame = currentFrame;
+    }
+
+    function onPointerMove(e) {
+      if (!isDragging) return;
+      var clientX = e.clientX || (e.touches && e.touches[0].clientX);
+      var diffX = clientX - startX;
+      var frameOffset = Math.round(diffX / 6);
+      updateFrame(startFrame + frameOffset);
+    }
+
+    function onPointerUp() {
+      isDragging = false;
+    }
+
+    viewer.addEventListener('mousedown', onPointerDown);
+    window.addEventListener('mousemove', onPointerMove);
+    window.addEventListener('mouseup', onPointerUp);
+
+    viewer.addEventListener('touchstart', onPointerDown, { passive: true });
+    window.addEventListener('touchmove', onPointerMove, { passive: true });
+    window.addEventListener('touchend', onPointerUp);
+  </script>
+</body>
+</html>
