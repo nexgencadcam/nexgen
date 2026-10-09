@@ -19,10 +19,12 @@
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 fill=%22%2308080D%22/><path d=%22M50 15 L85 50 L50 85 L15 50 Z%22 fill=%22none%22 stroke=%22%23C9A962%22 stroke-width=%228%22/></svg>" type="image/svg+xml">
 </head>
 <body>
+  <canvas id="globalParticleCanvas" class="global-particles-canvas" aria-hidden="true"></canvas>
 
   <header class="site-header">
     <div class="container header-inner">
-      <a href="index.html" class="brand" aria-label="NEXGENCADCAM Home">
+      <a href="index.html" class="brand" aria-label="NEXGEN CADCAM Home">
+        <img src="images/logo_cropped.png" alt="NEXGEN CADCAM" class="header-logo">
         <span class="brand-text">NEXGEN<span class="brand-accent">CADCAM</span></span>
       </a>
       <nav class="nav-primary" aria-label="Primary">
@@ -58,10 +60,11 @@
   <main>
     <!-- Page Hero -->
     <section class="section page-hero hero-bg" style="background-image: linear-gradient(to bottom, rgba(8, 8, 13, 0.8), rgba(8, 8, 13, 0.95)), url('https://images.unsplash.com/photo-1573408301185-9146fe634ad0?w=1400&q=80');">
+      <div class="page-hero-mesh" aria-hidden="true"></div>
       <div class="container">
         <div class="page-hero-content text-center" data-reveal>
-          <span class="eyebrow">◇ Our Services</span>
-          <h1>Professional Jewellery CAD/CAM Services</h1>
+          <span class="eyebrow"><span class="live-status-dot"></span> Our Services</span>
+          <h1><span class="shimmer-gold-text">Professional Jewellery</span> CAD/CAM Services</h1>
           <p class="lede">Comprehensive digital design services from initial concept modelling to production-ready manufacturing files for rings, pendants, earrings, and bangles.</p>
         </div>
       </div>
@@ -162,44 +165,107 @@
       </div>
     </section>
 
-    <!-- How It Works -->
-    <section class="section bg-secondary">
+    <!-- How It Works (KoderHive-Style Roadmap) -->
+    <section class="section bg-secondary roadmap-section">
       <div class="container">
         <div class="section-header text-center" data-reveal>
           <span class="eyebrow">The Process</span>
-          <h2>How It Works</h2>
-          <p>A simple, transparent process from idea to execution.</p>
+          <h2>Our CAD/CAM Roadmap</h2>
+          <p>A transparent, high-precision workflow designed to take your jewellery ideas from initial sketch to production-ready castable files.</p>
         </div>
         
-        <div class="timeline mt-xl" style="position: relative; max-width: 800px; margin-inline: auto;">
-          <div style="position: absolute; left: 24px; top: 0; bottom: 0; width: 2px; background: var(--border-gold); z-index: 0;"></div>
-          
-          <div class="timeline-item" data-reveal style="position: relative; z-index: 1; display: flex; gap: 2rem; margin-bottom: 2rem;">
-            <div class="timeline-num" style="width: 48px; height: 48px; border-radius: 50%; background: var(--gold); color: var(--bg-primary); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 1.25rem; flex-shrink: 0; border: 4px solid var(--bg-secondary);">1</div>
-            <div class="timeline-content card" style="flex-grow: 1; padding: 1.5rem;">
-              <h4 style="margin-bottom: 0.5rem;">Share Your Idea</h4>
-              <p class="text-muted text-sm">Send us your design concept through a sketch, reference image, or description. We'll discuss your requirements in detail.</p>
+        <div class="kh-roadmap-container" id="servicesRoadmap">
+          <!-- Left Column: Steps Navigation (Desktop) -->
+          <div class="kh-roadmap-steps-col">
+            <div class="kh-step-indicator active" data-step="1">
+              <span class="kh-step-badge">Phase 01</span>
+              <h4 class="kh-step-nav-title">Concept & Spec</h4>
+            </div>
+            <div class="kh-step-indicator" data-step="2">
+              <span class="kh-step-badge">Phase 02</span>
+              <h4 class="kh-step-nav-title">3D CAD Modelling</h4>
+            </div>
+            <div class="kh-step-indicator" data-step="3">
+              <span class="kh-step-badge">Phase 03</span>
+              <h4 class="kh-step-nav-title">Review & Refine</h4>
+            </div>
+            <div class="kh-step-indicator" data-step="4">
+              <span class="kh-step-badge">Phase 04</span>
+              <h4 class="kh-step-nav-title">CAM File Delivery</h4>
             </div>
           </div>
-          <div class="timeline-item" data-reveal style="position: relative; z-index: 1; display: flex; gap: 2rem; margin-bottom: 2rem;">
-            <div class="timeline-num" style="width: 48px; height: 48px; border-radius: 50%; background: var(--gold); color: var(--bg-primary); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 1.25rem; flex-shrink: 0; border: 4px solid var(--bg-secondary);">2</div>
-            <div class="timeline-content card" style="flex-grow: 1; padding: 1.5rem;">
-              <h4 style="margin-bottom: 0.5rem;">CAD Design</h4>
-              <p class="text-muted text-sm">Our designers create a detailed 3D CAD model of your jewellery piece using professional software.</p>
+
+          <!-- Center Column: Animated Timeline Bar with glowing Dots -->
+          <div class="kh-roadmap-timeline-col">
+            <div class="kh-timeline-bar">
+              <div class="kh-timeline-progress"></div>
+            </div>
+            <div class="kh-dot kh-dot-1 active" data-step="1">
+              <span>1</span>
+            </div>
+            <div class="kh-dot kh-dot-2" data-step="2">
+              <span>2</span>
+            </div>
+            <div class="kh-dot kh-dot-3" data-step="3">
+              <span>3</span>
+            </div>
+            <div class="kh-dot kh-dot-4" data-step="4">
+              <span>4</span>
             </div>
           </div>
-          <div class="timeline-item" data-reveal style="position: relative; z-index: 1; display: flex; gap: 2rem; margin-bottom: 2rem;">
-            <div class="timeline-num" style="width: 48px; height: 48px; border-radius: 50%; background: var(--gold); color: var(--bg-primary); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 1.25rem; flex-shrink: 0; border: 4px solid var(--bg-secondary);">3</div>
-            <div class="timeline-content card" style="flex-grow: 1; padding: 1.5rem;">
-              <h4 style="margin-bottom: 0.5rem;">Review & Revisions</h4>
-              <p class="text-muted text-sm">You review the rendered design and request any modifications. We refine until you're fully satisfied.</p>
+
+          <!-- Right Column: Detailed Step Cards -->
+          <div class="kh-roadmap-content-col">
+            <!-- Step 1 Card -->
+            <div class="kh-roadmap-card card" data-step="1" data-reveal>
+              <div class="kh-card-header">
+                <span class="kh-mobile-badge">Phase 01</span>
+                <h3>Share Your Vision & Requirements</h3>
+              </div>
+              <p>Send us your design concept through a rough hand sketch, reference photo, or detailed description. Include ring size, gemstone dimensions, and preferred metal weight.</p>
+              <ul class="kh-card-features">
+                <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg> Technical feasibility assessment</li>
+                <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg> Casting shrinkage & thickness validation</li>
+              </ul>
             </div>
-          </div>
-          <div class="timeline-item" data-reveal style="position: relative; z-index: 1; display: flex; gap: 2rem;">
-            <div class="timeline-num" style="width: 48px; height: 48px; border-radius: 50%; background: var(--gold); color: var(--bg-primary); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 1.25rem; flex-shrink: 0; border: 4px solid var(--bg-secondary);">4</div>
-            <div class="timeline-content card" style="flex-grow: 1; padding: 1.5rem;">
-              <h4 style="margin-bottom: 0.5rem;">Final Design Delivery</h4>
-              <p class="text-muted text-sm">We deliver manufacturing-ready CAD files in your preferred format, ready for casting or production.</p>
+
+            <!-- Step 2 Card -->
+            <div class="kh-roadmap-card card" data-step="2" data-reveal>
+              <div class="kh-card-header">
+                <span class="kh-mobile-badge">Phase 02</span>
+                <h3>Precision 3D CAD Modelling</h3>
+              </div>
+              <p>Our CAD specialists build the complete piece inside MatrixGold and Rhino CAD. Every prong, micro-pavé seat, hollow channel, and hinge is engineered with manufacturing tolerances.</p>
+              <ul class="kh-card-features">
+                <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg> Accurate stone seats & prong geometry</li>
+                <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg> Precise metal weight calculation</li>
+              </ul>
+            </div>
+
+            <!-- Step 3 Card -->
+            <div class="kh-roadmap-card card" data-step="3" data-reveal>
+              <div class="kh-card-header">
+                <span class="kh-mobile-badge">Phase 03</span>
+                <h3>Photorealistic Review & Client Revisions</h3>
+              </div>
+              <p>You receive high-resolution 3D renders from multiple angles (and interactive previews) to share with your clients for approval. We tweak dimensions and styling until 100% perfection.</p>
+              <ul class="kh-card-features">
+                <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg> Multi-angle studio lighting renders</li>
+                <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg> Fast revisions & fine-tuning</li>
+              </ul>
+            </div>
+
+            <!-- Step 4 Card -->
+            <div class="kh-roadmap-card card" data-step="4" data-reveal>
+              <div class="kh-card-header">
+                <span class="kh-mobile-badge">Phase 04</span>
+                <h3>Production-Ready CAM Delivery</h3>
+              </div>
+              <p>Once approved, we deliver clean, watertight .STL, .3DM, and .STEP files ready for 3D wax/resin printing, direct investment casting, or precision CNC milling.</p>
+              <ul class="kh-card-features">
+                <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg> Manifold, watertight STL meshes</li>
+                <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg> Compatible with all major casting systems</li>
+              </ul>
             </div>
           </div>
         </div>
@@ -295,23 +361,23 @@
       <div class="footer-grid grid-4">
         <div class="footer-brand">
           <a href="index.html" class="brand" aria-label="NEXGEN CADCAM Home">
-            <img src="images/logo-transparent.png" alt="NEXGEN CADCAM" class="footer-logo">
-          </a>
+            <img src="images/NEXGEN LOGO.png" alt="NEXGEN CADCAM" class="footer-logo">
+           </a>
           <p>Precision digital jewellery design and expert CAD/CAM modelling services in Pakistan.</p>
           <div class="social-links">
-            <a href="https://instagram.com" class="social-link" aria-label="Instagram" target="_blank" rel="noopener">
+            <a href="https://www.instagram.com/nexgencadcam/" class="social-link" aria-label="Instagram" target="_blank" rel="noopener">
               <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
                 <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
                 <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
               </svg>
             </a>
-            <a href="https://facebook.com" class="social-link" aria-label="Facebook" target="_blank" rel="noopener">
+            <a href="https://www.facebook.com/profile.php?id=61595338136196" class="social-link" aria-label="Facebook" target="_blank" rel="noopener">
               <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
               </svg>
             </a>
-            <a href="https://linkedin.com" class="social-link" aria-label="LinkedIn" target="_blank" rel="noopener">
+            <a href="https://www.linkedin.com/in/nexgen-cadcam-432089442/?isSelfProfile=true" class="social-link" aria-label="LinkedIn" target="_blank" rel="noopener">
               <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
                 <rect x="2" y="9" width="4" height="12"></rect>
@@ -341,7 +407,7 @@
         </div>
         <div class="footer-contact">
          <h4>Contact Us</h4>
-                    <p>Email: <a href="mailto:info@nexgencadcam.com">nexgencadcam@gmail.com</a></p>
+                    <p>Email: <a href="mailto:info@nexgencadcam.com">info@nexgencadcam.com</a></p>
                     <p>Phone: <a href="tel:+923000000000">+92 315 2388877</a></p>
                     <p>Location: Karachi,Pakistan</p>
         </div>

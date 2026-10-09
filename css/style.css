@@ -44,6 +44,7 @@ html {
   scroll-behavior: smooth;
   font-size: 16px;
   overflow-x: hidden;
+  background-color: var(--bg-primary);
 }
 
 body {
@@ -104,7 +105,7 @@ ul, ol {
 
   /* Layout Tokens */
   --container: 1280px;
-  --gap-section: clamp(72px, 9vw, 130px);
+  --gap-section: clamp(36px, 4.5vw, 56px);
   --radius-sm: 4px;
   --radius-md: 8px;
   --radius-lg: 14px;
@@ -353,35 +354,46 @@ p:last-child {
   text-shadow: 0 0 16px rgba(201, 169, 98, 0.45);
 }
 
+.header-logo,
 .brand-logo {
-  height: 54px;
+  height: 44px;
   width: auto;
-  max-width: 175px;
+  max-width: 52px;
   object-fit: contain;
   display: block;
-  mix-blend-mode: screen;
-  filter: drop-shadow(0 2px 10px rgba(201, 169, 98, 0.3));
-  transition: transform 0.3s var(--ease);
+  mix-blend-mode: normal;
+  filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.45));
+  transition: transform 0.3s var(--ease), filter 0.3s var(--ease);
 }
 
+@media (max-width: 600px) {
+  .header-logo {
+    height: 36px;
+    max-width: 44px;
+  }
+}
+
+.brand:hover .header-logo,
 .brand:hover .brand-logo {
-  transform: scale(1.03);
+  transform: scale(1.06);
+  filter: drop-shadow(0 0 12px rgba(201, 169, 98, 0.5));
 }
 
 .footer-logo {
-  height: 64px;
+  height: 84px;
   width: auto;
   max-width: 220px;
   object-fit: contain;
   display: block;
   margin-bottom: 16px;
-  filter: drop-shadow(0 4px 14px rgba(201, 169, 98, 0.22));
+  mix-blend-mode: normal;
+  filter: drop-shadow(0 4px 16px rgba(0, 0, 0, 0.5));
   transition: transform 0.3s var(--ease), filter 0.3s var(--ease);
 }
 
 .brand:hover .footer-logo {
-  transform: scale(1.03);
-  filter: drop-shadow(0 6px 18px rgba(201, 169, 98, 0.38));
+  transform: scale(1.04);
+  filter: drop-shadow(0 0 16px rgba(201, 169, 98, 0.4));
 }
 
 .nav-primary {
@@ -921,7 +933,7 @@ body.nav-open {
 .page-hero-content {
   max-width: 700px;
   margin: 0 auto;
-  padding: 80px 0 60px;
+  padding: 24px 0 20px;
 }
 
 .page-hero-content h1 {
@@ -977,14 +989,23 @@ body.nav-open {
    11. Cards
    ========================================================================== */
 .card {
+  --mouse-x: 50%;
+  --mouse-y: 50%;
   background-color: var(--bg-card);
+  background-image: radial-gradient(
+    550px circle at var(--mouse-x) var(--mouse-y),
+    rgba(201, 169, 98, 0.08),
+    transparent 50%
+  );
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-lg);
   overflow: hidden;
-  transition: transform 0.25s var(--ease), border-color 0.25s var(--ease), box-shadow 0.25s var(--ease);
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s var(--ease), box-shadow 0.3s var(--ease);
   position: relative;
   display: flex;
   flex-direction: column;
+  transform-style: preserve-3d;
+  will-change: transform;
 }
 
 .card::before {
@@ -992,21 +1013,44 @@ body.nav-open {
   position: absolute;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 2px;
+  width: 4px;
+  height: 100%;
   background-color: transparent;
-  transition: background-color 0.25s var(--ease);
+  transition: background-color 0.25s var(--ease), box-shadow 0.25s var(--ease);
   z-index: 2;
+  border-top-left-radius: var(--radius-lg);
+  border-bottom-left-radius: var(--radius-lg);
 }
 
 .card:hover {
-  transform: translateY(-4px);
+  transform: translateY(-5px);
   border-color: var(--border-gold);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.38), 0 0 20px rgba(201, 169, 98, 0.08);
 }
 
 .card:hover::before {
   background-color: var(--gold);
+  box-shadow: 2px 0 12px rgba(201, 169, 98, 0.4);
+}
+
+/* --------------------------------------------------------------------------
+   Remove vertical line strictly from Listings & Services cards
+   -------------------------------------------------------------------------- */
+.portfolio-card::before,
+.portfolio-card:hover::before,
+.service-card::before,
+.service-card:hover::before,
+.service-card-detailed::before,
+.service-card-detailed:hover::before,
+.kh-roadmap-card::before,
+.kh-roadmap-card:hover::before,
+.cta-box::before,
+.cta-box:hover::before {
+  display: none !important;
+  content: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  box-shadow: none !important;
 }
 
 .card-media {
@@ -1155,6 +1199,15 @@ body.nav-open {
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-lg);
   overflow: hidden;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), 
+              border-color 0.35s ease, 
+              box-shadow 0.35s ease;
+}
+
+.portfolio-card:hover {
+  transform: translateY(-8px) scale(1.015);
+  border-color: rgba(201, 169, 98, 0.5);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5), 0 0 25px rgba(201, 169, 98, 0.12);
 }
 
 .portfolio-card .card-overlay {
@@ -1321,6 +1374,235 @@ body.nav-open {
   
   .timeline-content {
     padding-top: 10px;
+  }
+}
+
+/* ==========================================================================
+   16b. Interactive CAD Roadmap (KoderHive Style)
+   ========================================================================== */
+.roadmap-section {
+  position: relative;
+  overflow: hidden;
+}
+
+.kh-roadmap-container {
+  display: grid;
+  grid-template-columns: 220px 70px 1fr;
+  gap: 24px;
+  max-width: 1080px;
+  margin: 0 auto;
+  position: relative;
+  align-items: stretch;
+}
+
+/* Left column navigation */
+.kh-roadmap-steps-col {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 10px 0;
+}
+
+.kh-step-indicator {
+  padding: 18px 16px;
+  border-radius: var(--radius-md);
+  background: transparent;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all 0.3s var(--ease);
+  text-align: right;
+}
+
+.kh-step-indicator:hover {
+  background: rgba(201, 169, 98, 0.05);
+}
+
+.kh-step-indicator.active {
+  background: rgba(201, 169, 98, 0.1);
+  border-color: var(--border-gold);
+  transform: translateX(4px);
+}
+
+.kh-step-badge {
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--gold);
+  margin-bottom: 4px;
+}
+
+.kh-step-nav-title {
+  font-size: 1.05rem;
+  color: var(--text-primary);
+  margin: 0;
+  font-family: var(--font-heading);
+  transition: color 0.3s ease;
+}
+
+.kh-step-indicator.active .kh-step-nav-title {
+  color: var(--gold);
+}
+
+/* Center timeline column */
+.kh-roadmap-timeline-col {
+  position: relative;
+  display: flex;
+  justify-content: center;
+}
+
+.kh-timeline-bar {
+  position: absolute;
+  top: 25px;
+  bottom: 25px;
+  left: 50%;
+  width: 4px;
+  background: rgba(255, 255, 255, 0.08);
+  transform: translateX(-50%);
+  border-radius: 99px;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.kh-timeline-progress {
+  width: 100%;
+  height: 0%;
+  background: linear-gradient(to bottom, var(--gold-light) 0%, var(--gold) 100%);
+  box-shadow: 0 0 16px rgba(201, 169, 98, 0.7);
+  border-radius: 99px;
+  transition: height 0.12s ease-out;
+}
+
+.kh-dot {
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--bg-card);
+  border: 2px solid var(--border-gold);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--text-secondary);
+  transition: all 0.35s var(--ease);
+  z-index: 3;
+}
+
+.kh-dot.active {
+  background: var(--gold);
+  color: #08080D;
+  border-color: var(--gold-light);
+  box-shadow: 0 0 22px rgba(201, 169, 98, 0.75);
+  transform: translate(-50%, -50%) scale(1.15);
+}
+
+/* Right content cards */
+.kh-roadmap-content-col {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.kh-roadmap-card {
+  padding: 30px 32px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  transition: all 0.3s var(--ease);
+  position: relative;
+}
+
+.kh-roadmap-card:hover {
+  border-color: var(--border-gold);
+  transform: translateY(-3px);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
+}
+
+.kh-mobile-badge {
+  display: none;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--gold);
+  margin-bottom: 8px;
+}
+
+.kh-card-header h3 {
+  font-size: 1.35rem;
+  margin-bottom: 12px;
+  color: var(--text-primary);
+}
+
+.kh-roadmap-card p {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  line-height: 1.65;
+  margin-bottom: 18px;
+}
+
+.kh-card-features {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  border-top: 1px solid var(--border-subtle);
+  padding-top: 16px;
+}
+
+.kh-card-features li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+}
+
+.kh-card-features li svg {
+  color: var(--gold);
+  flex-shrink: 0;
+}
+
+/* Responsive - Tablet & Mobile */
+@media (max-width: 880px) {
+  .kh-roadmap-container {
+    grid-template-columns: 46px 1fr;
+    gap: 16px;
+  }
+  
+  .kh-roadmap-steps-col {
+    display: none;
+  }
+  
+  .kh-mobile-badge {
+    display: inline-block;
+  }
+  
+  .kh-roadmap-timeline-col {
+    width: 46px;
+  }
+  
+  .kh-timeline-bar {
+    left: 23px;
+  }
+  
+  .kh-dot {
+    left: 23px;
+    width: 38px;
+    height: 38px;
+    font-size: 0.9rem;
+  }
+  
+  .kh-roadmap-card {
+    padding: 24px 20px;
+  }
+  
+  .kh-card-header h3 {
+    font-size: 1.15rem;
   }
 }
 
@@ -1652,7 +1934,7 @@ body.nav-open {
   background-image: linear-gradient(135deg, rgba(201,169,98,0.05) 0%, transparent 100%);
   border-top: 1px solid var(--border-subtle);
   border-bottom: 1px solid var(--border-subtle);
-  padding: 80px 20px;
+  padding: 50px 20px;
   position: relative;
   overflow: hidden;
 }
@@ -1672,15 +1954,17 @@ body.nav-open {
    22. Page Hero (inner pages)
    ========================================================================== */
 .page-hero {
-  height: 50vh;
-  min-height: 400px;
+  height: auto;
+  min-height: 380px;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   text-align: center;
   position: relative;
   overflow: hidden;
-  padding-top: var(--header-h);
+  padding-top: calc(var(--header-h) + 50px);
+  padding-bottom: 50px;
 }
 
 .page-hero::before {
@@ -1704,17 +1988,130 @@ body.nav-open {
 .page-hero-content {
   position: relative;
   z-index: 2;
-  max-width: 800px;
+  max-width: 820px;
   padding: 0 20px;
 }
 
-.page-hero-content h1 {
-  margin-bottom: 16px;
+/* Modern Fancy Hero Banner Animations (About, Services, Listings, Contact) */
+.page-hero h1,
+.hero-section h1 {
+  background: linear-gradient(
+    110deg,
+    #FFFFFF 0%,
+    #FFFFFF 30%,
+    #F4E4BA 45%,
+    #C9A962 55%,
+    #F4E4BA 65%,
+    #FFFFFF 78%,
+    #FFFFFF 100%
+  );
+  background-size: 260% 100%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: heroGoldShimmer 8s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  text-shadow: none;
+  margin-bottom: 18px;
+  letter-spacing: -0.015em;
+  position: relative;
+  z-index: 2;
 }
 
-.page-hero-content p {
-  font-size: 1.1rem;
+@keyframes heroGoldShimmer {
+  0% {
+    background-position: -200% center;
+  }
+  100% {
+    background-position: 200% center;
+  }
+}
+
+.page-hero::after,
+.hero-section::after {
+  content: '';
+  position: absolute;
+  top: 45%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: min(650px, 80vw);
+  height: min(300px, 45vh);
+  background: radial-gradient(ellipse at center, rgba(201, 169, 98, 0.16) 0%, rgba(201, 169, 98, 0.04) 50%, transparent 75%);
+  filter: blur(45px);
+  pointer-events: none;
+  z-index: 1;
+  animation: heroAuraPulse 7s ease-in-out infinite alternate;
+}
+
+@keyframes heroAuraPulse {
+  0% {
+    transform: translate(-50%, -50%) scale(0.92);
+    opacity: 0.55;
+  }
+  50% {
+    transform: translate(-49%, -52%) scale(1.08);
+    opacity: 0.85;
+  }
+  100% {
+    transform: translate(-51%, -48%) scale(0.96);
+    opacity: 0.6;
+  }
+}
+
+.page-hero .eyebrow,
+.hero-section .eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 20px;
+  border-radius: 99px;
+  background: rgba(201, 169, 98, 0.09);
+  border: 1px solid rgba(201, 169, 98, 0.3);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  color: var(--gold-light);
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  box-shadow: 0 0 20px rgba(201, 169, 98, 0.15), inset 0 0 12px rgba(201, 169, 98, 0.05);
+  margin-bottom: 18px;
+  animation: eyebrowFloat 4.5s ease-in-out infinite alternate;
+  position: relative;
+  z-index: 2;
+}
+
+@keyframes eyebrowFloat {
+  0% {
+    transform: translateY(0);
+    box-shadow: 0 0 16px rgba(201, 169, 98, 0.12);
+  }
+  100% {
+    transform: translateY(-4px);
+    box-shadow: 0 0 28px rgba(201, 169, 98, 0.28);
+  }
+}
+
+.page-hero .lede,
+.hero-section .lede {
+  position: relative;
+  z-index: 2;
+  font-size: 1.08rem;
+  line-height: 1.7;
   color: var(--text-secondary);
+  max-width: 680px;
+  margin-inline: auto;
+}
+
+.page-hero.hero-bg {
+  animation: heroBgDrift 24s ease-in-out infinite alternate;
+}
+
+@keyframes heroBgDrift {
+  0% {
+    background-size: 105%;
+  }
+  100% {
+    background-size: 112%;
+  }
 }
 
 .page-hero.has-3d-showcase {
@@ -1764,7 +2161,6 @@ body.nav-open {
 .value-card {
   background-color: var(--bg-card);
   border: 1px solid var(--border-subtle);
-  border-left: 4px solid var(--gold);
   border-radius: var(--radius-md);
   padding: 32px;
 }
@@ -1774,24 +2170,467 @@ body.nav-open {
 }
 
 /* ==========================================================================
-   24. Scroll Reveal
+   24. Senior Luxury 3D & Interactive Animation System
    ========================================================================== */
+
+/* Liquid Gold Kinetic Typography Shimmer */
+.shimmer-gold-text {
+  background: linear-gradient(
+    120deg,
+    #C9A962 0%,
+    #FFF8E7 22%,
+    #E8D5A3 45%,
+    #C9A962 65%,
+    #8B7535 82%,
+    #FFF8E7 94%,
+    #C9A962 100%
+  );
+  background-size: 260% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: goldSheenFlow 7s ease-in-out infinite;
+  display: inline;
+}
+
+@keyframes goldSheenFlow {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* Hero Interactive Particles Canvas Layer */
+.hero {
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-particles-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.hero > .container {
+  position: relative;
+  z-index: 2;
+}
+
+/* Floating 3D CAD Telemetry Badges */
+.cad-float-badge {
+  position: absolute;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background: rgba(16, 16, 24, 0.78);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(201, 169, 98, 0.35);
+  border-radius: 999px;
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: var(--text-primary);
+  text-transform: uppercase;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.45), 0 0 18px rgba(201, 169, 98, 0.12);
+  z-index: 6;
+  pointer-events: auto;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s var(--ease), box-shadow 0.3s var(--ease);
+  user-select: none;
+}
+
+.cad-float-badge:hover {
+  border-color: var(--gold);
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.6), 0 0 24px rgba(201, 169, 98, 0.35);
+  transform: scale(1.06) translateZ(25px);
+}
+
+.cad-float-badge .cad-badge-icon {
+  color: var(--gold);
+  font-size: 0.85rem;
+  line-height: 1;
+}
+
+.cad-badge-tr {
+  top: 10%;
+  right: -4%;
+  animation: floatOrb 5.5s ease-in-out infinite;
+}
+
+.cad-badge-bl {
+  bottom: 12%;
+  left: -8%;
+  animation: floatOrb 6.8s ease-in-out 1.2s infinite;
+}
+
+.cad-badge-tl {
+  top: 30%;
+  left: -6%;
+  animation: floatOrb 6.2s ease-in-out 2.2s infinite;
+}
+
+.cad-badge-pulse {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: var(--gold);
+  box-shadow: 0 0 8px var(--gold);
+  animation: badgeBlink 2s ease-in-out infinite;
+}
+
+@keyframes floatOrb {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-12px) rotate(0.6deg);
+  }
+}
+
+@keyframes badgeBlink {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.3; transform: scale(0.8); }
+}
+
+@media (max-width: 991px) {
+  .cad-badge-tl {
+    display: none;
+  }
+  .cad-badge-tr {
+    top: 4%;
+    right: 2%;
+  }
+  .cad-badge-bl {
+    bottom: 6%;
+    left: 2%;
+  }
+}
+
+@media (max-width: 576px) {
+  .cad-float-badge {
+    font-size: 0.65rem;
+    padding: 6px 12px;
+  }
+  .cad-badge-tr {
+    top: 2%;
+    right: 0;
+  }
+  .cad-badge-bl {
+    bottom: 0;
+    left: 0;
+  }
+}
+
+/* Animated 3D Blueprint CAD Mesh for Inner Page Heroes */
+.page-hero {
+  position: relative;
+  overflow: hidden;
+}
+
+.page-hero-mesh {
+  position: absolute;
+  inset: 0;
+  background-image: 
+    linear-gradient(to right, rgba(201, 169, 98, 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(201, 169, 98, 0.05) 1px, transparent 1px);
+  background-size: 44px 44px;
+  mask-image: radial-gradient(circle at 50% 50%, black 25%, transparent 80%);
+  -webkit-mask-image: radial-gradient(circle at 50% 50%, black 25%, transparent 80%);
+  opacity: 0.7;
+  pointer-events: none;
+  animation: gridDrift 30s linear infinite;
+}
+
+@keyframes gridDrift {
+  0% { background-position: 0 0; }
+  100% { background-position: 44px 44px; }
+}
+
+/* Primary Buttons Specular Shine Sweep */
+.btn-primary {
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease, background-color 0.25s ease;
+}
+
+.btn-primary::after {
+  content: '';
+  position: absolute;
+  top: -60%;
+  left: -80%;
+  width: 60%;
+  height: 220%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.32),
+    transparent
+  );
+  transform: rotate(25deg);
+  transition: left 0.8s ease;
+  pointer-events: none;
+}
+
+.btn-primary:hover::after {
+  left: 150%;
+}
+
+.btn-primary:hover {
+  box-shadow: 0 10px 26px rgba(201, 169, 98, 0.4), 0 0 14px rgba(201, 169, 98, 0.25);
+  transform: translateY(-2px);
+}
+
+/* Eyebrow Ambient Gold Pulse */
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  animation: eyebrowGlow 4.5s ease-in-out infinite;
+}
+
+@keyframes eyebrowGlow {
+  0%, 100% { opacity: 0.9; filter: drop-shadow(0 0 0px var(--gold)); }
+  50% { opacity: 1; filter: drop-shadow(0 0 6px rgba(201, 169, 98, 0.5)); }
+}
+
+/* Trust Strip Light Sweep */
+.trust-item svg {
+  transition: transform 0.3s ease, filter 0.3s ease;
+}
+
+.trust-item:hover svg {
+  transform: scale(1.25) rotate(5deg);
+  filter: drop-shadow(0 0 8px var(--gold));
+}
+
+/* Sophisticated Staggered Scroll Reveal System */
 [data-reveal] {
   opacity: 0;
-  transform: translateY(30px);
-  transition: opacity 0.6s var(--ease), transform 0.6s var(--ease);
+  transform: translateY(32px) scale(0.985);
+  filter: blur(4px);
+  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+              filter 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  transition-delay: var(--reveal-delay, 0s);
+  will-change: opacity, transform, filter;
 }
 
 [data-reveal].in-view {
   opacity: 1;
-  transform: translateY(0);
+  transform: translateY(0) scale(1);
+  filter: blur(0);
+}
+
+/* Directional & Zoom Reveal Modifiers */
+[data-reveal="left"] {
+  transform: translateX(-35px) scale(0.98);
+}
+[data-reveal="left"].in-view {
+  transform: translateX(0) scale(1);
+}
+
+[data-reveal="right"] {
+  transform: translateX(35px) scale(0.98);
+}
+[data-reveal="right"].in-view {
+  transform: translateX(0) scale(1);
+}
+
+[data-reveal="zoom"] {
+  transform: scale(0.92);
+}
+[data-reveal="zoom"].in-view {
+  transform: scale(1);
+}
+
+/* --------------------------------------------------------------------------
+   Diamond Dust Particles Background (full page, hero to footer).
+   Stars are masked out over cards/images in JS (see main.js 4b).
+   -------------------------------------------------------------------------- */
+.global-particles-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.9;
+}
+
+/* --------------------------------------------------------------------------
+   Dynamic Rotating Kinetic Typography (Hero Changing Text - Balanced Speed)
+   -------------------------------------------------------------------------- */
+.hero-rotator {
+  display: inline-block;
+  position: relative;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), 
+              opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1), 
+              filter 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform, opacity, filter;
+  transform-style: preserve-3d;
+}
+
+.hero-rotator.swap-out {
+  transform: translateY(-22px) rotateX(45deg) scale(0.96);
+  opacity: 0;
+  filter: blur(4px);
+}
+
+.hero-rotator.swap-in-prep {
+  transform: translateY(22px) rotateX(-45deg) scale(0.96);
+  opacity: 0;
+  filter: blur(4px);
+  transition: none !important;
+}
+
+.hero-rotator.swap-in {
+  transform: translateY(0) rotateX(0deg) scale(1);
+  opacity: 1;
+  filter: blur(0);
+}
+
+/* Pulsing Status Dot in Hero */
+.live-status-dot {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background-color: var(--gold);
+  box-shadow: 0 0 10px var(--gold);
+  animation: liveDotPulse 2s ease-in-out infinite;
+  vertical-align: middle;
+  margin-right: 4px;
+}
+
+@keyframes liveDotPulse {
+  0%, 100% { transform: scale(1); opacity: 1; box-shadow: 0 0 6px var(--gold); }
+  50% { transform: scale(1.35); opacity: 0.6; box-shadow: 0 0 14px rgba(201, 169, 98, 0.85); }
+}
+
+/* Smooth Portfolio Filter Transitions */
+.portfolio-card.filter-in {
+  animation: filterFadeIn 0.38s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.portfolio-card.filter-out {
+  opacity: 0 !important;
+  transform: scale(0.93) !important;
+  transition: opacity 0.22s ease, transform 0.22s ease !important;
+  pointer-events: none;
+}
+
+@keyframes filterFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.93) translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* Luxury Image Frame & Ambient Aura (Our Story / About) */
+.luxury-image-frame {
+  position: relative;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.5s ease;
+  perspective: 1000px;
+}
+
+.luxury-image-frame:hover {
+  transform: translateY(-6px) scale(1.02);
+  box-shadow: 0 24px 50px rgba(0, 0, 0, 0.6), 0 0 30px rgba(201, 169, 98, 0.2);
+}
+
+.image-ambient-aura {
+  position: absolute;
+  inset: -15%;
+  background: radial-gradient(circle at center, rgba(201, 169, 98, 0.25) 0%, transparent 65%);
+  filter: blur(25px);
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.7;
+  animation: pulseGlow 6s ease-in-out infinite alternate;
+}
+
+.luxury-image-frame img {
+  position: relative;
+  z-index: 1;
+  border-radius: var(--radius-lg);
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.luxury-image-frame:hover img {
+  transform: scale(1.04);
+}
+
+/* Inner Page Hero Particles Canvas */
+.page-particles-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.65;
+}
+
+/* Service Card Detailed Hover Brilliance */
+.service-card-detailed {
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), 
+              border-color 0.35s ease, 
+              box-shadow 0.35s ease;
+}
+
+.service-card-detailed:hover {
+  transform: translateY(-8px) scale(1.015);
+  border-color: rgba(201, 169, 98, 0.5);
+  box-shadow: 0 24px 48px rgba(0, 0, 0, 0.5), 0 0 25px rgba(201, 169, 98, 0.15);
+}
+
+.service-card-detailed:hover .service-icon {
+  transform: scale(1.1) rotate(6deg);
+  background-color: rgba(201, 169, 98, 0.25);
+  box-shadow: 0 0 20px rgba(201, 169, 98, 0.4);
+}
+
+.service-card-detailed .service-icon {
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), 
+              background-color 0.3s ease, 
+              box-shadow 0.3s ease;
 }
 
 @media (prefers-reduced-motion: reduce) {
   [data-reveal] {
-    opacity: 1;
-    transform: none;
-    transition: none;
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+    transition: none !important;
+  }
+  .shimmer-gold-text {
+    animation: none !important;
+  }
+  .cad-float-badge {
+    animation: none !important;
+  }
+  .page-hero-mesh {
+    animation: none !important;
+  }
+  .hero-rotator {
+    transition: none !important;
   }
 }
 
@@ -1869,7 +2708,7 @@ body.nav-open {
 .section-header {
   text-align: center;
   max-width: 700px;
-  margin: 0 auto clamp(40px, 5vw, 64px);
+  margin: 0 auto clamp(20px, 3vw, 32px);
 }
 
 .section-header p {
@@ -2016,6 +2855,17 @@ body.nav-open {
 
 .story-content {
   flex: 1;
+}
+.story-content h2 {
+  margin-bottom: 24px;
+}
+.story-content p {
+  color: var(--text-secondary);
+  line-height: 1.8;
+  font-size: 1.02rem;
+}
+.story-content p + p {
+  margin-top: 18px;
 }
 .story-image {
   flex: 1;
@@ -2180,7 +3030,6 @@ body.nav-open {
 .mission-card,
 .vision-card {
   padding: 36px 30px;
-  border-left: 4px solid var(--gold);
 }
 .feature-card {
   padding: 30px 24px;
