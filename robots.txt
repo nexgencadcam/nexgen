@@ -1,0 +1,29 @@
+# robots.txt for https://nexgencadcam.com/
+# Clean indexing rules for search engines (Google, Bing, Yahoo/Slurp, etc.)
+
+User-agent: *
+Allow: /
+Disallow: /test_overflow.html
+Disallow: /ring-360-preview.html
+
+# Major search engines explicitly allowed
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: Slurp
+Allow: /
+
+User-agent: DuckDuckBot
+Allow: /
+
+User-agent: Baiduspider
+Allow: /
+
+User-agent: YandexBot
+Allow: /
+
+# Canonical XML Sitemap
+Sitemap: https://nexgencadcam.com/sitemap.xml

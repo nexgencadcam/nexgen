@@ -1,0 +1,41 @@
+# ==============================================================================
+# NEX GEN CAD CAM - Apache Server Configuration
+# Canonical HTTPS & Non-WWW Redirects + SEO & Security Hardening
+# ==============================================================================
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+
+  # 1. Permanently Redirect HTTP to HTTPS (preserves query strings & paths)
+  RewriteCond %{HTTPS} off
+  RewriteRule ^(.*)$ https://nexgencadcam.com/$1 [R=301,L]
+
+  # 2. Permanently Redirect WWW to Non-WWW (preserves SSL and prevents loops)
+  RewriteCond %{HTTP_HOST} ^www\.nexgencadcam\.com$ [NC]
+  RewriteRule ^(.*)$ https://nexgencadcam.com/$1 [R=301,L]
+</IfModule>
+
+# ==============================================================================
+# Security & Indexing Headers
+# ==============================================================================
+<IfModule mod_headers.c>
+  # HTTP Strict Transport Security (HSTS)
+  Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains" env=HTTPS
+
+  # Prevent MIME type sniffing
+  Header set X-Content-Type-Options "nosniff"
+
+  # Prevent clickjacking
+  Header set X-Frame-Options "SAMEORIGIN"
+
+  # Referrer Policy
+  Header set Referrer-Policy "strict-origin-when-cross-origin"
+
+  # Explicit permission for search snippets on indexable pages
+  <FilesMatch "\.(html|htm)$">
+    Header set X-Robots-Tag "index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1"
+  </FilesMatch>
+</IfModule>
+
+# Ensure directory index works seamlessly
+DirectoryIndex index.html

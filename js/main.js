@@ -1,6 +1,12 @@
 (function() {
     'use strict';
 
+    // Canonical HTTPS & Non-WWW Redirection Guard (preserves local development, prevents redirect loops)
+    if (window.location.hostname === 'www.nexgencadcam.com' || (window.location.protocol === 'http:' && window.location.hostname === 'nexgencadcam.com')) {
+        window.location.replace('https://nexgencadcam.com' + window.location.pathname + window.location.search + window.location.hash);
+        return;
+    }
+
     var prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     // 1. Header Scroll State + Back to Top
